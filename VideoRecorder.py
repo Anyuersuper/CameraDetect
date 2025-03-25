@@ -15,12 +15,12 @@ class VideoRecorder(tk.Toplevel):
         self.cap = cv2.VideoCapture(self.deviceid)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-        self.fps = 20.0
+        self.fps = 30
         self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = None
         self.recording = False
         self.start_time = None
-        self.timepoint = 10
+        self.timepoint = 60
         self.video_dir = 'videos'  # 视频文件存放目录
         self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
 
