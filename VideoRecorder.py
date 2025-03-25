@@ -75,7 +75,7 @@ class VideoRecorder(tk.Toplevel):
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             #yolo4再检测一轮
             frame = yolodetector.detectbyyolo4(frame)
-            # 每 10 秒切换一个新文件
+            # 每 X 秒切换一个新文件
             if time.time() - self.start_time >= self.timepoint:
                 if self.out:
                     self.out.release()
