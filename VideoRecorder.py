@@ -1,0 +1,91 @@
+#视频录制类
+import cv2
+import time
+import os
+from threading import Thread
+from Yolo4Detect import Yolo4Detect
+
+class VideoRecorder:
+    def __init__(self):
+        self.cap = cv2.VideoCapture(0)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.fps = 20.0
+        self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        self.out = None
+        self.recording = False
+        self.start_time = None
+        self.width = 640
+        self.height = 480
+        self.timepoint = 10
+        self.video_dir = 'videos'  # 视频文件存放目录
+        self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
+
+        # 如果没有 videos 文件夹，则创建
+        if not os.path.exists(self.video_dir):
+            os.makedirs(self.video_dir)
+            
+    def getmyinfo(self):
+        print("video_dir:",self.video_dir)
+        print("frontalfacepath:",self.frontalfacepath)
+        
+    def start_recording(self):
+        if not self.cap.isOpened():
+            messagebox.showerror("错误", "无法打开摄像头")
+            return
+        # 启动录制线程
+        self.thread = Thread(target=self.record_video)
+        self.thread.start()
+
+    def stop_recording(self):
+        self.recording = False
+        if self.out:
+            self.out.release()
+        messagebox.showinfo("停止录制", "视频已保存。")
+
+    def record_video(self):
+        self.recording = True
+        self.start_time = time.time()
+        # 生成视频文件名
+        video_path = os.path.join(self.video_dir,f"video_" + str(time.time()) + ".mp4")
+        self.out = cv2.VideoWriter(video_path, self.fourcc, self.fps, (self.width, self.height))
+        # 加载 Haar 分类器
+        face_cascade = cv2.CascadeClassifier(self.frontalfacepath)
+        # 初始化判断器
+        yolodetector = Yolo4Detect()
+        while self.recording:
+            ret, frame = self.cap.read()
+            if not ret:
+                print("无法接收视频帧，退出")
+                break
+            # 转为灰度图像进行人脸检测
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            # 使用 detectMultiScale 方法检测人脸
+            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+            # 在每个检测到的人脸上绘制矩形框
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            #yolo4再检测一轮
+            frame = yolodetector.detectbyyolo4(frame)
+            # 每 10 秒切换一个新文件
+            if time.time() - self.start_time >= self.timepoint:
+                if self.out:
+                    self.out.release()
+                video_path = os.path.join(self.video_dir, f"video_" + str(time.time()) + ".mp4")
+                self.out = cv2.VideoWriter(video_path, self.fourcc, self.fps, (self.width, self.height))
+                self.start_time = time.time()
+            # 记录视频
+            self.out.write(frame)
+            # 显示视频帧
+            cv2.imshow('Camera', frame)
+            cv2.waitKey(1)
+        self.cap.release()
+        cv2.destroyAllWindows()
+        
+if __name__ == "__main__":
+    recorder = VideoRecorder()  # 创建 VideoRecorder 实例
+    recorder.getmyinfo()
+
+
+
+
