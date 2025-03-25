@@ -9,17 +9,18 @@ from tkinter import messagebox, filedialog
 
 class VideoRecorder(tk.Toplevel):
     def __init__(self):
-        self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.deviceid = 0
+        self.width = 640
+        self.height = 480
+        self.cap = cv2.VideoCapture(self.deviceid)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         self.fps = 20.0
         self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = None
         self.recording = False
         self.start_time = None
-        self.width = 640
-        self.height = 480
-        self.timepoint = 60
+        self.timepoint = 10
         self.video_dir = 'videos'  # 视频文件存放目录
         self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
 
@@ -30,11 +31,15 @@ class VideoRecorder(tk.Toplevel):
     def getmyinfo(self):
         print("video_dir:",self.video_dir)
         print("frontalfacepath:",self.frontalfacepath)
+
+    def cv2init(self):
+        self.cap = cv2.VideoCapture(self.deviceid)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         
     def start_recording(self):
         if not self.cap.isOpened():
-            messagebox.showerror("错误", "无法打开摄像头")
-            return
+            self.cv2init()
         # 启动录制线程
         self.thread = Thread(target=self.record_video)
         self.thread.start()
@@ -43,6 +48,7 @@ class VideoRecorder(tk.Toplevel):
         self.recording = False
         if self.out:
             self.out.release()
+            self.thread.join()#等待线程关闭结束
         messagebox.showinfo("停止录制", "视频已保存。")
 
     def record_video(self):
@@ -81,7 +87,7 @@ class VideoRecorder(tk.Toplevel):
             # 显示视频帧
             cv2.imshow('Camera', frame)
             cv2.waitKey(1)
-        self.cap.release()
+        #self.cap.release()
         cv2.destroyAllWindows()
         
 if __name__ == "__main__":
