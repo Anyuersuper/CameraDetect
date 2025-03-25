@@ -86,7 +86,7 @@ class VideoRecorder(tk.Toplevel):
             self.out.write(frame)
             # 显示视频帧
             cv2.imshow('Camera', frame)
-            cv2.waitKey(1)
+            cv2.waitKey(int(1000/self.fps))
         #self.cap.release()
         cv2.destroyAllWindows()
         
@@ -95,5 +95,3 @@ if __name__ == "__main__":
     recorder = VideoRecorder()  # 创建 VideoRecorder 实例
     recorder.getmyinfo()
     root.mainloop()
-
-
