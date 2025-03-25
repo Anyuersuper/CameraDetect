@@ -3,7 +3,7 @@ import os
 import subprocess
 import tkinter as tk
 from tkinter import messagebox, filedialog
-
+from VideoPlayer import VideoPlayer
 
 
 class VideoBrowser(tk.Toplevel):
@@ -41,15 +41,9 @@ class VideoBrowser(tk.Toplevel):
         if selected_index:
             selected_file = self.listbox.get(selected_index)  # 获取选中的文件名
             file_path = os.path.join(self.video_dir, selected_file)  # 构造完整路径
-            if os.path.exists(file_path):
-                try:
-                    os.startfile(file_path)  # Windows
-                except AttributeError:
-                    subprocess.run(["open", file_path])  # macOS
-                except FileNotFoundError:
-                    subprocess.run(["xdg-open", file_path])  # Linux
-            else:
-                messagebox.showerror("错误", "文件不存在！")
+            vp = VideoPlayer(file_path)
+        else:
+            messagebox.showerror("错误", "文件不存在！")
 
 # 确保 main 函数启动
 if __name__ == "__main__":
@@ -58,7 +52,6 @@ if __name__ == "__main__":
     root = tk.Tk()  # 创建主窗口
     video_browser = VideoBrowser(video_dir)  # 创建 VideoBrowser 实例
     root.mainloop()  # 启动主事件循环
-
 
 
 
