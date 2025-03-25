@@ -4,8 +4,10 @@ import time
 import os
 from threading import Thread
 from Yolo4Detect import Yolo4Detect
+import tkinter as tk
+from tkinter import messagebox, filedialog
 
-class VideoRecorder:
+class VideoRecorder(tk.Toplevel):
     def __init__(self):
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -17,7 +19,7 @@ class VideoRecorder:
         self.start_time = None
         self.width = 640
         self.height = 480
-        self.timepoint = 10
+        self.timepoint = 60
         self.video_dir = 'videos'  # 视频文件存放目录
         self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
 
@@ -83,9 +85,9 @@ class VideoRecorder:
         cv2.destroyAllWindows()
         
 if __name__ == "__main__":
+    root = tk.Tk()
     recorder = VideoRecorder()  # 创建 VideoRecorder 实例
     recorder.getmyinfo()
-
-
+    root.mainloop()
 
 
