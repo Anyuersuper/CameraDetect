@@ -27,16 +27,20 @@ class VideoRecorder(tk.Toplevel):
         # 如果没有 videos 文件夹，则创建
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
-            
+
+    def setfps(self,fps):
+        self.fps=fps
+
     def getmyinfo(self):
         print("video_dir:",self.video_dir)
         print("frontalfacepath:",self.frontalfacepath)
 
     def cv2init(self):
+        self.cap.release()
         self.cap = cv2.VideoCapture(self.deviceid)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-        
+
     def start_recording(self):
         if not self.cap.isOpened():
             self.cv2init()
@@ -50,6 +54,32 @@ class VideoRecorder(tk.Toplevel):
             self.out.release()
             self.thread.join()#等待线程关闭结束
         messagebox.showinfo("停止录制", "视频已保存。")
+        
+    def setfenbianlv(self,width,height):
+        # 关线程
+        self.recording = False
+        if self.out:
+            self.out.release()
+            self.cap.release()
+            self.thread.join()#等待线程关闭结束
+        # 切换分辨率
+        self.width=width
+        self.height=height
+        self.cv2init()
+        actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        
+        # 如果实际分辨率与设置的分辨率相同，表示设备支持该分辨率
+        if actual_width == width and actual_height == height:
+            messagebox.showinfo("分辨率兼容", "切换成功！")
+        else:
+            messagebox.showinfo("分辨率不兼容", "切换回默认分辨率。")
+            self.width=640
+            self.height=480
+            self.cv2init()
+        
+        self.thread = Thread(target=self.record_video)
+        self.thread.start()
 
     def record_video(self):
         self.recording = True
