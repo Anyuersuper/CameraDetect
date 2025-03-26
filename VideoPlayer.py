@@ -160,7 +160,7 @@ class VideoPlayer(tk.Toplevel):
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry('200x100')
-    video_path = 'videodemo.mp4'
+    video_path = 'test/videodemo.mp4'
     player = VideoPlayer(video_path)
     root.mainloop()
 

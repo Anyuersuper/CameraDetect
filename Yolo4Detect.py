@@ -95,7 +95,7 @@ class Yolo4Detect:
     
 if __name__ == "__main__": 
     yolodetector = Yolo4Detect()
-    yolodetector.detectbyyolo4("CarandPerson.png",show_result=True)
+    yolodetector.detectbyyolo4(r"test/CarandPerson.png",show_result=True)
     
 
 
