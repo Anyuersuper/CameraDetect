@@ -10,7 +10,7 @@ from VideoRecorder import VideoRecorder
 from VideoPlayer import VideoPlayer
 
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog ,simpledialog
 from threading import Thread
 
 
@@ -20,20 +20,21 @@ class Application(tk.Tk):
         super().__init__()
 
         self.title("AI摄像头")
-        self.geometry("300x300")
+        self.geometry("300x350")
         
         # 创建 VideoRecorder 实例
         self.recorder = VideoRecorder(self)
 
         # 存储路径变量
         self.storage_path = self.recorder.video_dir  # 直接从 recorder 获取 video_dir
+        self.timepoint = self.recorder.timepoint
         
         # 开始录制按钮
-        self.start_button = tk.Button(self, text="开始录制", command=self.start_recording)
+        self.start_button = tk.Button(self, text="开始检测", command=self.start_recording)
         self.start_button.pack(pady=10)
 
         # 停止录制按钮
-        self.stop_button = tk.Button(self, text="停止录制", command=self.stop_recording)
+        self.stop_button = tk.Button(self, text="停止检测", command=self.stop_recording)
         self.stop_button.pack(pady=10)
         self.stop_button.config(state=tk.DISABLED)
 
@@ -43,17 +44,26 @@ class Application(tk.Tk):
         
         # 绑定关闭窗口事件
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        # 时间间隔设置
+        self.timepointgrid = tk.Frame(self, width=300 ,height= 100)
+        self.timepointgrid.pack(pady=10)  
+        tk.Label(self.timepointgrid, text="存储间隔(s):").grid(row=0, column=0)
+        self.showtimepoint = tk.Label(self.timepointgrid, width=2,text=self.timepoint, justify="right")  
+        self.showtimepoint.grid(row=0, column=1)
+        self.changetimepoint = tk.Button(self.timepointgrid, text="...", width=3, command = self.change_timepoint)
+        self.changetimepoint.grid(row=0, column=2, padx=5)
         
         # 存储路径布局
         self.savapathgrid = tk.Frame(self, width=300)
         self.savapathgrid.pack(pady=10)
         tk.Label(self.savapathgrid, text="存储路径:").grid(row=0, column=0)
-        self.path_label = tk.Label(self.savapathgrid, width=10,text=self.storage_path, justify="right")  # 直接显示路径
+        self.path_label = tk.Label(self.savapathgrid, width=20,text=self.storage_path, justify="right")  # 直接显示路径
         self.path_label.grid(row=0, column=1)
         # 选择路径的按钮
         self.browse_button = tk.Button(self.savapathgrid, text="...", width=3, command=self.changesavepath)
         self.browse_button.grid(row=0, column=2, padx=5)
-        
+
         # 分辨率布局
         self.fenbianlvgrid = tk.Frame(self, width=300, height=100)
         self.fenbianlvgrid.pack(pady=10) 
@@ -80,6 +90,7 @@ class Application(tk.Tk):
         self.zhen30.grid(row=0, column=4)
         self.zhen60 = tk.Button(self.zhenlvgrid, text="60", width=5, command=self.fps60)
         self.zhen60.grid(row=0, column=5)
+
 
     # Application 类中的分辨率按钮回调函数
     def p480(self):
@@ -132,6 +143,30 @@ class Application(tk.Tk):
                         config_file.write(f'path={new_path}\n')
                     else:
                         config_file.write(line)
+                        
+    def change_timepoint(self):
+        # 弹出输入框让用户输入新的时间间隔
+        new_timepoint = simpledialog.askinteger("输入新的时间间隔", "请输入新的时间间隔（秒）:", parent=self)
+        if new_timepoint:
+            # 更新 VideoRecorder 的 video_dir 属性
+            self.recorder.settimepoint(new_timepoint)
+
+            # 更新界面显示的路径
+            self.timepoint = new_timepoint
+            self.showtimepoint.config(text=self.timepoint)
+
+            # 读取并修改 config.info 文件中的路径
+            with open("config.info", "r") as config_file:
+                lines = config_file.readlines()
+
+            # 找到并修改 path 行
+            with open("config.info", "w") as config_file:
+                for line in lines:
+                    if line.startswith('timepoint='):
+                        config_file.write(f'timepoint={new_timepoint}\n')
+                    else:
+                        config_file.write(line)
+        
 
     
     def start_recording(self):

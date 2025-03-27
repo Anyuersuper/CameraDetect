@@ -32,11 +32,13 @@ class VideoRecorder(tk.Toplevel):
         self.out = None
         self.recording = False
         self.start_time = None
-        self.timepoint = 60
 
         # 如果没有视频存储目录，则创建
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
+
+    def settimepoint(self,times):
+        self.timepoint= times
 
     def load_config(self):
         """读取 config.info 文件并设置 video_dir 和 frontalfacepath"""
@@ -49,11 +51,14 @@ class VideoRecorder(tk.Toplevel):
                     # 查找配置项 frontalfacepath
                     elif line.startswith("frontalfacepath="):
                         self.frontalfacepath = line.strip().split('=')[1]
+                    elif line.startswith("timepoint="):
+                        self.timepoint = line.strip().split('=')[1]
         except Exception as e:
             print(f"读取 config.info 时发生错误: {e}")
             # 如果读取配置文件出错，使用默认目录和默认人脸分类器路径
             self.video_dir = 'videos'
             self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
+            self.timepoint = 60
 
     def set_video_dir(self,new_path):
         self.video_dir = new_path
@@ -110,7 +115,7 @@ class VideoRecorder(tk.Toplevel):
             frame = yolodetector.detectbyyolo4(frame)  # yolo4再检测一轮
             
             # 每 X 秒切换一个新文件
-            if time.time() - self.start_time >= self.timepoint:
+            if time.time() - self.start_time >= int(self.timepoint):
                 if self.out:
                     self.out.release()
                 video_path = os.path.join(self.video_dir, f"video_" + str(time.time()) + ".mp4")
@@ -130,13 +135,12 @@ class VideoRecorder(tk.Toplevel):
             self.recording = False
             if self.out:
                 self.out.release()
-                self.cap.release()
+                #self.cap.release()
                 self.thread.join()  # 等待线程关闭结束
 
             self.width = width
             self.height = height
-            self.cv2init()  # 重新初始化摄像头
-
+            self.cv2init()
             # 检查是否支持该分辨率
             actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -144,27 +148,27 @@ class VideoRecorder(tk.Toplevel):
             if actual_width == width and actual_height == height:
                 # 使用 after() 将消息框更新操作放到主线程
                 self.root.after(100, self.show_resolution_message, "分辨率兼容", "切换成功！")
+                #self.cv2init()  # 重新初始化摄像头
                 self.thread = Thread(target=self.record_video)
                 self.thread.start()
             else:
-                self.root.after(100, self.show_resolution_message, "分辨率不兼容", "切换回默认分辨率。")
+                self.root.after(100, self.show_resolution_message, "分辨率不兼容", "已切换回默认分辨率")
                 self.width = 640
                 self.height = 480
                 self.cv2init()  # 切换回默认分辨率
+                self.thread = Thread(target=self.record_video)
+                self.thread.start()
         else:
             self.recording = False
             if self.out:
                 self.out.release()
                 self.cap.release()
                 self.thread.join()
-
             self.width = width
             self.height = height
             self.cv2init()  # 重新初始化摄像头
-            
             actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            
             # 检查摄像头是否支持该分辨率
             if actual_width == width and actual_height == height:
                 self.root.after(100, self.show_resolution_message, "分辨率兼容", "切换成功！")
@@ -175,6 +179,8 @@ class VideoRecorder(tk.Toplevel):
                 self.width = 640
                 self.height = 480
                 self.cv2init()  # 切换回默认分辨率
+            
+
 
     def setfenbianlv_async(self, width, height):
         """异步设置分辨率"""
