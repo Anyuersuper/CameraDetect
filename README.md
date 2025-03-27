@@ -36,17 +36,6 @@ python main.py
    - 使用"停止录制"按钮结束录制
    - 使用"播放视频"按钮查看录制的视频
 
-## 界面展示
-
-### 主界面
-![主界面](https://github.com/user-attachments/assets/6483c651-c072-4fac-9ad4-ad7ec83b80c8)
-
-### 目标检测效果
-![识别效果](https://github.com/user-attachments/assets/14a9866a-d362-402f-91a6-23294244d693)
-
-### 读取本地视频
-![读取视频](https://github.com/user-attachments/assets/04ae31dd-1379-4d95-9d04-389955ee225b)
-
 ## 环境要求
 
 - Python 3.7+
@@ -70,6 +59,17 @@ python main.py
 - 首次运行前请确保已安装所有依赖包
 - 确保摄像头设备可用
 - 录制的视频将保存在 `videos` 目录下
+
+## 界面展示
+
+### 主界面
+![主界面](https://github.com/user-attachments/assets/6483c651-c072-4fac-9ad4-ad7ec83b80c8)
+
+### 目标检测效果
+![识别效果](https://github.com/user-attachments/assets/14a9866a-d362-402f-91a6-23294244d693)
+
+### 读取本地视频
+![读取视频](https://github.com/user-attachments/assets/04ae31dd-1379-4d95-9d04-389955ee225b)
 
 ## 许可证
 
