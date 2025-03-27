@@ -22,7 +22,7 @@
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/你的用户名/CameraDetect.git
+git clone https://github.com/Anyuersuper/CameraDetect.git
 cd CameraDetect
 ```
 
