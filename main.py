@@ -19,7 +19,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("AI摄像头")
+        self.title("目标检测与视频录制")
         self.geometry("300x350")
         
         # 创建 VideoRecorder 实例
