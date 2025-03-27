@@ -33,14 +33,18 @@
 ---
 
 ## 使用教程：
-1. 安装依赖：
+1. 克隆项目：
+   '''
+   git clone https://github.com/Anyuersuper/CameraDetect
+   '''
+3. 安装依赖：
 
    ```bash
    pip install opencv-python
    pip install -r requirements.txt
    ```
 
-2. 运行程序：
+4. 运行程序：
 
    ```bash
    python main.py
