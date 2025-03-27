@@ -34,9 +34,10 @@
 
 ## 使用教程：
 1. 克隆项目：
-   '''
+   ```bash
    git clone https://github.com/Anyuersuper/CameraDetect
-   '''
+   ```
+   
 3. 安装依赖：
 
    ```bash
