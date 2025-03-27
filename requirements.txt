@@ -1,2 +1,4 @@
 numpy==1.21.6
 Pillow==11.1.0
+opencv-python==4.5.5.64
+PyQt5==5.15.9
