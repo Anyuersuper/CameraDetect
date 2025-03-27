@@ -49,7 +49,7 @@ class VideoRecorder(tk.Toplevel):
                     if line.startswith("path="):
                         self.video_dir = line.strip().split('=')[1]
                     # 查找配置项 frontalfacepath
-                    elif line.startswith("frontalfacepath="):
+                    elif line.startswith("frontalface="):
                         self.frontalfacepath = line.strip().split('=')[1]
                     elif line.startswith("timepoint="):
                         self.timepoint = line.strip().split('=')[1]
@@ -57,9 +57,10 @@ class VideoRecorder(tk.Toplevel):
             print(f"读取 config.info 时发生错误: {e}")
             # 如果读取配置文件出错，使用默认目录和默认人脸分类器路径
             self.video_dir = 'videos'
-            self.frontalfacepath = r"cvxml/haarcascade_frontalface_default.xml"
+            self.frontalface = "cvxml/haarcascade_frontalface_default.xml"
             self.timepoint = 60
 
+        
     def set_video_dir(self,new_path):
         self.video_dir = new_path
     def setfps(self, fps):
@@ -97,7 +98,8 @@ class VideoRecorder(tk.Toplevel):
         video_path = os.path.join(self.video_dir, f"video_" + str(time.time()) + ".mp4")  # 生成视频文件名
         self.out = cv2.VideoWriter(video_path, self.fourcc, self.fps, (self.width, self.height))
         
-        face_cascade = cv2.CascadeClassifier(self.frontalfacepath)  # 加载 opencv-Haar 分类器
+        print(self.frontalfacepath)
+        face_cascade = cv2.CascadeClassifier("cvxml/haarcascade_frontalface_default.xml")  # 加载 opencv-Haar 分类器
         yolodetector = Yolo4Detect()  # 初始化 yolov4 判断器
         
         while self.recording:
