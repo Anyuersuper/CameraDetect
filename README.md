@@ -31,11 +31,7 @@
 
 ---
 
-## **未来优化方向**
-- **支持多线程**：提高视频播放流畅度。
-- **更换更高效的目标检测模型**（如 YOLOv8）。
-- **增强 GUI 交互性**，支持更多参数调整。
-
----
-
-如果你对本项目有任何建议，欢迎讨论和优化！🚀
+使用教程：
+pip install opencv-python
+pip install -r requirements.txt
+python main.py 即可正常运行
