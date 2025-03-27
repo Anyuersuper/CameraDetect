@@ -57,7 +57,7 @@ class VideoRecorder(tk.Toplevel):
             print(f"读取 config.info 时发生错误: {e}")
             # 如果读取配置文件出错，使用默认目录和默认人脸分类器路径
             self.video_dir = 'videos'
-            self.frontalfacepath = r"C:\Python311\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml"
+            self.frontalfacepath = r"cvxml/haarcascade_frontalface_default.xml"
             self.timepoint = 60
 
     def set_video_dir(self,new_path):
