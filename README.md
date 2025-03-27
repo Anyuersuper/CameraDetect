@@ -10,6 +10,17 @@
 - 视频播放和浏览
 - 简洁的图形用户界面
 
+## 界面展示
+
+### 主界面
+![主界面](https://github.com/user-attachments/assets/6483c651-c072-4fac-9ad4-ad7ec83b80c8)
+
+### 目标检测效果
+![识别效果](https://github.com/user-attachments/assets/14a9866a-d362-402f-91a6-23294244d693)
+
+### 读取本地视频
+![读取视频](https://github.com/user-attachments/assets/04ae31dd-1379-4d95-9d04-389955ee225b)
+
 ## 环境要求
 
 - Python 3.7+
@@ -22,7 +33,7 @@
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/Anyuersuper/CameraDetect.git
+git clone https://github.com/你的用户名/CameraDetect.git
 cd CameraDetect
 ```
 
