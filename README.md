@@ -63,8 +63,7 @@ python main.py
 ## 界面展示
 
 ### 主界面
-![主界面]![Uploading 19f6aedfa3369d53a026bd73a3f2929f.png…]()
-
+![主界面](https://github.com/user-attachments/assets/f21b1d75-81d7-479e-9ff4-b75a64f40418)
 
 ### 目标检测效果
 ![识别效果](https://github.com/user-attachments/assets/14a9866a-d362-402f-91a6-23294244d693)
